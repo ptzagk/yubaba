@@ -233,6 +233,10 @@ You're switching between controlled and uncontrolled, don't do this. Either alwa
     // If there is only a Baba target and no child animations
     // data will be undefined, which means there are no animations to store.
     if (this.data) {
+      if (process.env.NODE_ENV === 'development') {
+        console.time('capture-dom-on-unmount');
+      }
+
       const elementBoundingBox = getElementBoundingBox(this.element as HTMLElement);
       const focalTargetElementBoundingBox = this.focalTargetElement
         ? getElementBoundingBox(this.focalTargetElement)
@@ -261,6 +265,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
       };
 
       babaStore.set(name, data);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.timeEnd('capture-dom-on-unmount');
+      }
     }
   }
 
@@ -271,6 +279,14 @@ If it's an image, try and have the image loaded before mounting, or set a static
     if (fromTarget) {
       const { collectorData, elementData } = fromTarget;
       this.animating = true;
+
+      if (process.env.NODE_ENV === 'development') {
+        console.time('execution');
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.time('capture-dom');
+      }
 
       // Calculate DOM data for the executing element to then be passed to the animation/s.
       const animationData: AnimationData = {
@@ -286,35 +302,67 @@ If it's an image, try and have the image loaded before mounting, or set a static
         },
       };
 
+      if (process.env.NODE_ENV === 'development') {
+        console.timeEnd('capture-dom');
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.time('load-actions');
+      }
+
       // Loads each action up in an easy-to-execute format.
-      const actions = collectorData.map(targetData => {
+      const actions = collectorData.map((targetData, index) => {
         if (targetData.action === CollectorActions.animation) {
           // Element will be lazily instantiated if we need to add something to the DOM.
           let elementToMountChildren: HTMLElement;
 
           const mount = (jsx: React.ReactNode) => {
             if (!elementToMountChildren) {
+              if (process.env.NODE_ENV === 'development') {
+                console.time(`mounting-node (${index})`);
+              }
+
               elementToMountChildren = document.createElement('div');
               // We insert the new element at the beginning of the body to ensure correct
               // stacking context.
               document.body.insertBefore(elementToMountChildren, document.body.firstChild);
+
+              if (process.env.NODE_ENV === 'development') {
+                console.timeEnd(`mounting-node (${index})`);
+              }
             }
 
             // This ensures that if there was an update to the jsx that is animating,
             // it changes next frame. Resulting in the transition _actually_ happening.
-            requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              if (process.env.NODE_ENV === 'development') {
+                console.time(`render-node (${index})`);
+              }
+
               renderSubtreeIntoContainer(
                 this,
                 jsx as React.ReactElement<{}>,
                 elementToMountChildren
-              )
-            );
+              );
+
+              if (process.env.NODE_ENV === 'development') {
+                console.timeEnd(`render-node (${index})`);
+              }
+            });
           };
 
           const unmount = () => {
             if (elementToMountChildren) {
+              if (process.env.NODE_ENV === 'development') {
+                console.time(`unmounting-node (${index})`);
+              }
+
               unmountComponentAtNode(elementToMountChildren);
               document.body.removeChild(elementToMountChildren);
+
+              if (process.env.NODE_ENV === 'development') {
+                console.timeEnd(`unmounting-node (${index})`);
+              }
             }
           };
 
@@ -342,6 +390,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
             payload: {
               beforeAnimate: () => {
                 if (targetData.payload.beforeAnimate) {
+                  if (process.env.NODE_ENV === 'development') {
+                    console.time(`before-animate (${index})`);
+                  }
+
                   const deferred = defer();
                   const jsx = targetData.payload.beforeAnimate(
                     animationData,
@@ -353,12 +405,20 @@ If it's an image, try and have the image loaded before mounting, or set a static
                     mount(jsx);
                   }
 
+                  if (process.env.NODE_ENV === 'development') {
+                    console.timeEnd(`before-animate (${index})`);
+                  }
+
                   return deferred.promise;
                 }
 
                 return Promise.resolve();
               },
               animate: () => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.time(`animate (${index})`);
+                }
+
                 const deferred = defer();
                 const jsx = targetData.payload.animate(
                   animationData,
@@ -370,10 +430,18 @@ If it's an image, try and have the image loaded before mounting, or set a static
                   mount(jsx);
                 }
 
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd(`animate (${index})`);
+                }
+
                 return deferred.promise;
               },
               afterAnimate: () => {
                 if (targetData.payload.afterAnimate) {
+                  if (process.env.NODE_ENV === 'development') {
+                    console.time(`after-animate (${index})`);
+                  }
+
                   const deferred = defer();
                   const jsx = targetData.payload.afterAnimate(
                     animationData,
@@ -385,14 +453,26 @@ If it's an image, try and have the image loaded before mounting, or set a static
                     mount(jsx);
                   }
 
+                  if (process.env.NODE_ENV === 'development') {
+                    console.timeEnd(`after-animate (${index})`);
+                  }
+
                   return deferred.promise;
                 }
 
                 return Promise.resolve();
               },
               cleanup: () => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.time(`cleanup (${index})`);
+                }
+
                 unmount();
                 setChildProps(null);
+
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd(`cleanup (${index})`);
+                }
               },
             },
           };
@@ -400,6 +480,14 @@ If it's an image, try and have the image loaded before mounting, or set a static
 
         return targetData;
       });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.timeEnd('load-actions');
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.time('create-blocks');
+      }
 
       const blocks = actions.reduce<AnimationBlock[]>(
         (arr, targetData) => {
@@ -424,12 +512,20 @@ If it's an image, try and have the image loaded before mounting, or set a static
         [[]]
       );
 
+      if (process.env.NODE_ENV === 'development') {
+        console.timeEnd('create-blocks');
+      }
+
       this.abortAnimations = () => {
         if (this.animating) {
           this.animating = false;
           blocks.forEach(block => block.forEach(anim => anim.cleanup()));
         }
       };
+
+      if (process.env.NODE_ENV === 'development') {
+        console.time('before-animate (all)');
+      }
 
       const beforeAnimatePromises = actions.map(targetData =>
         targetData.action === CollectorActions.animation
@@ -439,6 +535,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
 
       Promise.all(beforeAnimatePromises)
         .then(() => {
+          if (process.env.NODE_ENV === 'development') {
+            console.timeEnd('before-animate (all)');
+          }
+
           // Wait two animation frames before triggering animations.
           // This makes sure state set inside animate don't happen in the same animation frame as beforeAnimate.
           const deferred = defer();
@@ -448,6 +548,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
           return deferred.promise;
         })
         .then(() => {
+          if (process.env.NODE_ENV === 'development') {
+            console.time('animate (all)');
+          }
+
           // Trigger each blocks animations, one block at a time.
           return (
             blocks
@@ -458,6 +562,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
                 Promise.resolve()
               )
               .then(() => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd('animate (all)');
+                }
+
                 // We're finished all the transitions! Show the child element.
                 this.setState({
                   shown: true,
@@ -470,6 +578,10 @@ If it's an image, try and have the image loaded before mounting, or set a static
                   context.onFinish({ name });
                 }
 
+                if (process.env.NODE_ENV === 'development') {
+                  console.time('after-animate (all)');
+                }
+
                 // Run through all after animates.
                 return blocks.reduce(
                   (promise, block) =>
@@ -480,9 +592,25 @@ If it's an image, try and have the image loaded before mounting, or set a static
                 );
               })
               .then(() => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd('after-animate (all)');
+                }
+
+                if (process.env.NODE_ENV === 'development') {
+                  console.time('cleanup (all)');
+                }
+
                 blocks.forEach(block => block.forEach(anim => anim.cleanup()));
+
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd('cleanup (all)');
+                }
               })
               .then(() => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.timeEnd('execution');
+                }
+
                 this.animating = false;
                 const { onFinish } = this.props;
                 onFinish();
