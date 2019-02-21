@@ -1,0 +1,255 @@
+---
+name: Introduction
+route: /
+---
+
+import { Playground } from 'docz';
+import { Toggler } from 'yubaba-common';
+import Baba from '../Baba';
+import { WrappedBabaManager as BabaManager } from '../BabaManager';
+import CrossFadeMove from '../animations/CrossFadeMove';
+import CircleExpand from '../animations/CircleExpand';
+import Wait from '../Wait';
+import * as Styled from './styled';
+
+# yubaba
+
+is an element animation orchestrator for React.js ✨
+
+## Why yubaba?
+
+`yubaba` is as much of a _platform_ as it is an **orchestrator**.
+It comes with prebuilt animations you can drop in and start using immediately,
+such as [ConcealMove](/conceal-move) and [RevealMove](/reveal-move)!
+
+But even better you can create _custom_ animations!
+Using the same [internals](/collector) the [prebuilt animations use](https://github.com/madou/yubaba/tree/master/packages/yubaba/src/animations),
+it comes with a first class customization experience for you to do,
+well,
+anything!
+
+## Installation
+
+```bash
+npm install yubaba emotion --save
+```
+
+or
+
+```bash
+yarn add yubaba emotion
+```
+
+## Getting started
+
+We'll build up each step to leave you with an _awesome_ transition.
+Click each gif to see its codesandbox.
+
+We have two disjointed components that are toggled when clicked (click on Finn!).
+How can we transition them to each other?
+
+<Playground>
+  <Toggler>
+    {toggler => (
+      <Styled.Root>
+        {!!toggler.shown || (
+          <Styled.FinnStart
+            onClick={toggler.toggle}
+            alt="Finn Start"
+          />
+        )}
+
+        {!!toggler.shown && (
+          <React.Fragment>
+            <Styled.FinnEnd
+              onClick={toggler.toggle}
+              alt="Finn End"
+            />
+
+            <Styled.Sword />
+          </React.Fragment>
+        )}
+      </Styled.Root>
+    )}
+
+  </Toggler>
+</Playground>
+
+**Introducing Baba and CrossFadeMove**
+
+Let's use the [Baba](/baba) and [CrossFadeMove](/cross-fade-move) components to have them seamlessly transition to the destination.
+[Baba](/Baba) is the brains - it does all of the orchestration.
+[CrossFadeMove](/cross-fade-move) is one of many focal animations available - it will cross fade both elements from the starting point to the destination point.
+
+<Playground>
+  <Toggler>
+    {toggler => (
+      <Styled.Root>
+        {!!toggler.shown || (
+          <Baba name="finn">
+            <CrossFadeMove>
+              {({ ref, style }) => (
+                <Styled.FinnStart
+                  style={style}
+                  innerRef={ref}
+                  onClick={toggler.toggle}
+                  alt="Finn Start"
+                />
+              )}
+            </CrossFadeMove>
+          </Baba>
+        )}
+
+        {!!toggler.shown && (
+          <React.Fragment>
+            <Baba name="finn">
+              <CrossFadeMove>
+                {({ ref, style }) => (
+                  <Styled.FinnEnd
+                    style={style}
+                    innerRef={ref}
+                    onClick={toggler.toggle}
+                    alt="Finn End"
+                  />
+                )}
+              </CrossFadeMove>
+            </Baba>
+
+            <Styled.Sword />
+          </React.Fragment>
+        )}
+      </Styled.Root>
+    )}
+
+  </Toggler>
+</Playground>
+
+Okay so that looks cool,
+but Finn's sword is shown immediately!
+Is there anything we can do to make it show after all animations have finished?
+
+**Introducing BabaManager**
+
+Let's bring in a component [BabaManager](/baba-manager) which will be used to delay showing Finn's sword.
+You can imagine this as content in a page around the destination element that should be shown _after_ all animations have finished.
+
+<Playground>
+  <Toggler>
+    {toggler => (
+      <Styled.Root>
+        {!!toggler.shown || (
+          <Baba name="finn">
+            <CrossFadeMove>
+              {({ ref, style }) => (
+                <Styled.FinnStart
+                  style={style}
+                  innerRef={ref}
+                  onClick={toggler.toggle}
+                  alt="Finn Start"
+                />
+              )}
+            </CrossFadeMove>
+          </Baba>
+        )}
+
+        {!!toggler.shown && (
+          <BabaManager>
+            {props => (
+              <React.Fragment>
+                <Baba name="finn">
+                  <CrossFadeMove>
+                    {({ ref, style }) => (
+                      <Styled.FinnEnd
+                        style={style}
+                        innerRef={ref}
+                        onClick={toggler.toggle}
+                        alt="Finn End"
+                      />
+                    )}
+                  </CrossFadeMove>
+                </Baba>
+
+                <Styled.Sword {...props} />
+              </React.Fragment>
+            )}
+          </BabaManager>
+        )}
+      </Styled.Root>
+    )}
+
+  </Toggler>
+</Playground>
+
+Cool,
+now we're making progress.
+We can do better though,
+what if Finn could really sell his preparation that he's about to attack?
+
+**Introducing CircleExpand**
+
+Let's bring in a component [CircleExpand](/circle-expand) which will expand to fit the viewport,
+for Finn it will give him some _oomph_ to really sell the attack.
+
+<Playground>
+  <Toggler>
+    {toggler => (
+      <Styled.Root>
+        {!!toggler.shown || (
+          <Baba name="finn">
+            <CrossFadeMove>
+                  <CircleExpand background="#fff">
+
+              {({ ref, style }) => (
+                <Styled.FinnStart
+                  style={style}
+                  innerRef={ref}
+                  onClick={toggler.toggle}
+                  alt="Finn Start"
+                />
+              )}
+                  </CircleExpand>
+
+            </CrossFadeMove>
+          </Baba>
+        )}
+
+        {!!toggler.shown && (
+          <BabaManager>
+            {props => (
+              <React.Fragment>
+                <Baba name="finn">
+                  <CrossFadeMove>
+                    {({ ref, style }) => (
+                      <Styled.FinnEnd
+                        style={style}
+                        innerRef={ref}
+                        onClick={toggler.toggle}
+                        alt="Finn End"
+                      />
+                    )}
+                  </CrossFadeMove>
+                </Baba>
+
+                <Styled.Sword {...props} />
+              </React.Fragment>
+            )}
+          </BabaManager>
+        )}
+      </Styled.Root>
+    )}
+
+  </Toggler>
+</Playground>
+
+Really cool!
+But both the [CircleExpand](#circle-expand) and [CrossFadeMove](#cross-fade-move) happening at the same time looks kind of weird,
+what if we could delay [CrossFadeMove](#cross-fade-move) until after [CircleExpand](#circle-expand) had finished animating?
+
+**Introducing Wait**
+
+Let's bring in a component [Wait](/wait) which will delay the next animation from happening until after the previous one has finished!
+
+[![Intro to Yubaba 4/4](https://github.com/madou/yubaba/blob/master/test/images/finn-4.gif?raw=true)](https://codesandbox.io/s/llv7pkv9y9)
+
+And there you have it,
+a masta-peece!

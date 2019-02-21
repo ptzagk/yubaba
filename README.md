@@ -21,14 +21,6 @@ it comes with a first class customization experience for you to do,
 well,
 anything!
 
-## Installation
+## [Docs](https://yubabajs.com)
 
-```bash
-npm install yubaba emotion --save
-```
-
-or
-
-```bash
-yarn add yubaba emotion
-```
+See the documentation at [yubabajs.com](https://yubabajs.com).
