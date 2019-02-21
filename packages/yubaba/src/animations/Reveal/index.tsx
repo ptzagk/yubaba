@@ -22,7 +22,7 @@ export interface RevealProps extends CollectorChildrenProps {
   zIndex?: number;
 
   /**
-   * Timing function to be used in the transition, see: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timing-function
+   * Timing function to be used in the transition.
    */
   timingFunction: string;
 

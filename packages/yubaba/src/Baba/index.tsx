@@ -119,7 +119,7 @@ export interface BabaProps extends CollectorChildrenProps, InjectedProps {
  * );
  * ```
  */
-export class Baba extends React.PureComponent<BabaProps, State> {
+export default class Baba extends React.PureComponent<BabaProps, State> {
   static displayName = 'Baba';
 
   static defaultProps = {
@@ -533,4 +533,4 @@ If it's an image, try and have the image loaded before mounting, or set a static
 /**
  * @hidden
  */
-export default withBabaManagerContext(Baba);
+export const WrappedBaba = withBabaManagerContext(Baba);

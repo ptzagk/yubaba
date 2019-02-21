@@ -10,7 +10,7 @@ export interface BabaManangerProps extends InjectedProps {
   children: (props: { style: InlineStyles }) => React.ReactNode;
 
   /**
-   * Optional name to target a specific child `<Baba />`.
+   * Optional name to target a specific child Baba.
    */
   name?: string;
 }
@@ -26,6 +26,9 @@ export interface State {
  * @hidden
  */
 export interface InjectedProps {
+  /**
+   * Internal context, ignore this.
+   */
   context?: BabaManagerContext;
 }
 
@@ -76,7 +79,7 @@ export const BabaContext = React.createContext<BabaManagerContext | undefined>(u
  * );
  * ```
  */
-export class BabaManager extends React.Component<BabaManangerProps, State> {
+export default class BabaManager extends React.Component<BabaManangerProps, State> {
   state: State = {
     style: {
       visibility: 'hidden',
@@ -149,4 +152,4 @@ export const withBabaManagerContext = <
 /**
  * @hidden
  */
-export default withBabaManagerContext(BabaManager);
+export const WrappedBabaManager = withBabaManagerContext(BabaManager);

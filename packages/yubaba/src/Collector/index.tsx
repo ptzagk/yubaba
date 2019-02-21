@@ -59,13 +59,11 @@ export type SupplyRenderChildrenHandler = (reactNode: CollectorChildrenAsFunctio
  */
 export type SupplyDataHandler = (data: CollectorData[]) => void;
 
-export type CollectorChildrenAsFunction = (
-  props: {
-    ref: SupplyRefHandler;
-    style: InlineStyles;
-    className?: string;
-  }
-) => React.ReactNode;
+export type CollectorChildrenAsFunction = (props: {
+  ref: SupplyRefHandler;
+  style: InlineStyles;
+  className?: string;
+}) => React.ReactNode;
 
 /**
  * @hidden

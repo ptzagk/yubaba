@@ -1,19 +1,28 @@
-import * as React from 'react';
-import { storiesOf } from '@storybook/react';
+---
+name: Move
+route: /move
+---
+
+import { Playground, PropsTable } from 'docz';
 import Select from 'react-select';
-import Baba, { Move } from 'yubaba';
 import { Toggler } from 'yubaba-common';
-import * as Styled from './styled';
-import data from './data';
+import Baba from '../../../Baba';
+import Move from '../index';
+import * as Examples from './examples';
 
-const DURATION = 350;
+# Move
 
-storiesOf('yubaba-examples/Transformation/Select', module).add('Default', () => (
+Useful for animating an element moving from one position to another.
+Works best when the element has **very little visual difference**.
+
+## Usage
+
+<Playground>
   <Toggler>
     {({ shown, toggle }) =>
       shown ? (
         <Baba name={`item-${shown}`}>
-          <Move duration={DURATION}>
+          <Move>
             {baba => (
               <div {...baba}>
                 <Select
@@ -25,10 +34,12 @@ storiesOf('yubaba-examples/Transformation/Select', module).add('Default', () => 
                   }}
                   onKeyDown={() => toggle()}
                   formatOptionLabel={() => (
-                    <Styled.Value>
-                      {data[+shown].title}
-                      <Styled.Description>{data[+shown].description}</Styled.Description>
-                    </Styled.Value>
+                    <Examples.Value>
+                      {Examples.data[shown].title}
+                      <Examples.Description>
+                        {Examples.data[shown].description}
+                      </Examples.Description>
+                    </Examples.Value>
                   )}
                 />
               </div>
@@ -36,25 +47,29 @@ storiesOf('yubaba-examples/Transformation/Select', module).add('Default', () => 
           </Move>
         </Baba>
       ) : (
-        <Styled.List>
-          {data.map((item, index) => (
+        <Examples.List>
+          {Examples.data.map((item, index) => (
             <Baba key={index} name={`item-${index}`}>
-              <Move duration={DURATION}>
+              <Move>
                 {baba => (
-                  <Styled.Value
+                  <Examples.Value
                     onClick={() => toggle(`${index}`)}
                     style={baba.style}
                     innerRef={baba.ref}
                   >
                     {item.title}
-                    <Styled.Description>{item.description}</Styled.Description>
-                  </Styled.Value>
+                    <Examples.Description>{item.description}</Examples.Description>
+                  </Examples.Value>
                 )}
               </Move>
             </Baba>
           ))}
-        </Styled.List>
+        </Examples.List>
       )
     }
   </Toggler>
-));
+</Playground>
+
+## Props
+
+<PropsTable of={Move} />
