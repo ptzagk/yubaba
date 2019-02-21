@@ -142,7 +142,10 @@ export const withBabaManagerContext = <
 
       return (
         <BabaContext.Consumer>
-          {context => <CoercedWrappedComponent context={context} {...this.props} />}
+          {context => (
+            // @ts-ignore
+            <CoercedWrappedComponent context={context} {...this.props} />
+          )}
         </BabaContext.Consumer>
       );
     }
