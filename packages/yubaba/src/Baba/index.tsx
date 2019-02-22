@@ -290,7 +290,7 @@ If it's an image, try and have the image loaded before mounting, or set a static
       const actions = collectorData.map(targetData => {
         if (targetData.action === CollectorActions.animation) {
           // Element will be lazily instantiated if we need to add something to the DOM.
-          let elementToMountChildren: HTMLElement;
+          let elementToMountChildren: HTMLElement | null = null;
 
           const mount = (jsx: React.ReactNode) => {
             if (!elementToMountChildren) {
@@ -315,6 +315,7 @@ If it's an image, try and have the image loaded before mounting, or set a static
             if (elementToMountChildren) {
               unmountComponentAtNode(elementToMountChildren);
               document.body.removeChild(elementToMountChildren);
+              elementToMountChildren = null;
             }
           };
 
