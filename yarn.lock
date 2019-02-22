@@ -2422,7 +2422,12 @@ ansi-regex@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.0.0.tgz#70de791edf021404c3fd615aa89118ae0432e5a9"
 
-ansi-styles@^2.2.1, ansi-styles@^3.2.0, ansi-styles@^3.2.1:
+ansi-styles@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
+  integrity sha1-tDLdM1i2NM914eRmQ2gkBTPB3b4=
+
+ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d"
   dependencies:
@@ -11792,6 +11797,11 @@ react-flip-toolkit@^6.3.0:
   resolved "https://registry.npmjs.org/react-flip-toolkit/-/react-flip-toolkit-6.5.6.tgz#7270e14b5ab796a16365f55e0f298276ec56987a"
   dependencies:
     rematrix "0.2.2"
+
+react-frame-component@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/react-frame-component/-/react-frame-component-4.0.2.tgz#408f137ab4ba14cd13a5844b86ac972903dda021"
+  integrity sha512-846zt81ijEC0ul6sBWzxkI5EGIE39ft9EaNzQUcszV/WWWDnldFJ+tKU7Et2GhZ4OHT/cy1GHcjsLLsdiOXhBg==
 
 react-fuzzy@^0.5.2:
   version "0.5.2"

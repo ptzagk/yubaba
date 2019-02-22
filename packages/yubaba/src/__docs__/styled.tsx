@@ -25,7 +25,7 @@ export const FinnEnd = styled.img.attrs({
   width: 203px;
   height: 311px;
   float: right;
-  z-index: 2;
+  z-index: 999999;
   position: relative;
 `;
 
