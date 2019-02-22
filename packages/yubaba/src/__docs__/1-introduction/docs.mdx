@@ -1,17 +1,8 @@
 ---
 name: 1. Introduction
 route: /
+order: 1
 ---
-
-import { Playground } from 'docz';
-import { Toggler } from 'yubaba-common';
-import Frame from 'react-frame-component';
-import Baba from '../Baba';
-import { WrappedBabaManager as BabaManager } from '../BabaManager';
-import CrossFadeMove from '../animations/CrossFadeMove';
-import CircleExpand from '../animations/CircleExpand';
-import Wait from '../Wait';
-import * as Styled from './styled';
 
 # yubaba
 
@@ -20,16 +11,18 @@ is an element animation orchestrator for React.js ✨
 ## Why yubaba?
 
 `yubaba` is as much of a _platform_ as it is an **orchestrator**.
-It comes with prebuilt animations you can drop in and start using immediately,
+It can control when, where, and how to start animations and comes with prebuilt animations you can drop in and start using immediately,
 such as [ConcealMove](/conceal-move) and [RevealMove](/reveal-move)!
 
-But even better you can create _custom_ animations!
+Even better you can create _custom_ animations!
 Using the same [internals](/collector) the [prebuilt animations use](https://github.com/madou/yubaba/tree/master/packages/yubaba/src/animations),
 it comes with a first class customization experience for you to do,
 well,
 anything!
 
 ## Installation
+
+`yubaba` has a peer dependency on [emotion](https://emotion.sh/docs/introduction) - make sure to use the latest for the best performance.
 
 ```bash
 npm install yubaba emotion --save
