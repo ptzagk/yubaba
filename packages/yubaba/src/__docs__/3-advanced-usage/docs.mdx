@@ -5,7 +5,14 @@ order: 1
 ---
 
 import { Playground } from 'docz';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
+import * as Styled from './styled';
+import { WrappedBaba as Baba } from '../../Baba';
+import { WrappedBabaManager as BabaManager } from '../../BabaManager';
+import CircleExpand from '../../animations/CircleExpand';
+import Move from '../../animations/Move';
+import CircleShrink from '../../animations/CircleShrink';
+import ovi from './images/ovechkin.jpg';
 
 # Advanced usage
 
@@ -14,10 +21,6 @@ import { Toggler } from 'yubaba-common';
 Occasionally when initiating an animation we can have some secondary content we want to keep hidden until the animation has finished.
 Luckily [BabaManager](/baba-manager) exists to do just that!
 Make it a parent of any [Baba](/baba) and it will show its content only when the animation has finished.
-
-<Playground>
-  <Toggler>{toggler => 'TODO'}</Toggler>
-</Playground>
 
 > **Tip -** If you have multiple child [Baba](/baba) you can pass [BabaManager](/baba-manager) a `name` prop to target a specific [Baba](/baba).
 
@@ -30,20 +33,51 @@ Two extra tools we have to do this is [CircleExpand](/circle-expand) and [Circle
 used together can produce a really cool transition between states.
 
 <Playground>
-  <Toggler>{toggler => 'TODO'}</Toggler>
+  <Styled.Center>
+    <Common.SmallViewport>
+      <Common.Toggler>
+        {({ shown, toggle }) => (
+          <div id="yo">
+            {!shown ? (
+              <Styled.Container>
+                <Baba name="circle-expand-square" key="1">
+                  <CircleExpand background="#fea3aa">
+                    {({ ref, style }) => (
+                      <Styled.Root onClick={() => toggle()} style={style} innerRef={ref} />
+                    )}
+                  </CircleExpand>
+                </Baba>
+              </Styled.Container>
+            ) : (
+              <BabaManager>
+                {props => (
+                  <Styled.Container
+                    onClick={() => toggle()}
+                    style={{ cursor: 'pointer', background: '#005aff', ...props.style }}
+                  >
+                    <Baba name="circle-expand-square" key="2">
+                      <CircleShrink background="#005aff">
+                        {({ ref, style }) => <div style={style} ref={ref} />}
+                      </CircleShrink>
+                    </Baba>
+                  </Styled.Container>
+                )}
+              </BabaManager>
+            )}
+          </div>
+        )}
+      </Common.Toggler>
+    </Common.SmallViewport>
+  </Styled.Center>
 </Playground>
 
-> **Tip -** The `container` prop has been used to target the example area,
-> generally you only need to use this if you have a particular area you want to use for secondary animations.
+> **Tip -** [BabaManager](/baba-manager) has been used as well to hide the next contents until the animation has finished,
+> resulting in that crisp transition.
 
 ## Wait for the previous animation to finish before starting the next
 
 Depending on the animations chosen you'll want to defer starting one until the previous has finished.
 Luckily the [Wait](/wait) component has been made for that!
-
-<Playground>
-  <Toggler>{toggler => 'TODO'}</Toggler>
-</Playground>
 
 > **Tip -** Animations are executed from top to bottom.
 > The parent-most animation will be executed first and then continue execution inwards.
@@ -54,6 +88,4 @@ At times we want to move all content at once but have it originate from a focal 
 The [FocalTarget](/focal-target) component exists to mark the focal element so animations who care can use it.
 Two examples of animations who can use it are [Expand](/expand) and [ExpandMove](/expand-move).
 
-<Playground>
-  <Toggler>{toggler => 'TODO'}</Toggler>
-</Playground>
+<Playground>rodo</Playground>

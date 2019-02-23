@@ -88,43 +88,9 @@ export interface BabaProps extends CollectorChildrenProps, InjectedProps {
    * HTMLElement container used when creating elements for animations,
    * generally only supporting animations will need this.
    */
-  container: HTMLElement;
+  container: HTMLElement | (() => HTMLElement);
 }
 
-/**
- * ## Baba
- *
- * This is the primary component in `yubaba`.
- * When rendering it will be given all of the animation data from its children.
- * When unmounting or flipping the prop `in` from `true` to `false`,
- * it will execute all the animations `top to bottom` below it if a matching `<Baba />` pair is found within 50ms.
- *
- * ### Usage
- *
- * ```
- * import Baba, { CrossFadeMove } from 'yubaba';
- *
- * const MyApp = ({ shown, show }) => (
- *  <div>
- *    {shown || (
- *      <Baba name="my-anim">
- *        <CrossFadeMove>
- *          {({ ref, style }) => <div onClick={() => show(false)} ref={ref} style={style}>starting point</div>}
- *        </CrossFadeMove>
- *      </Baba>
- *    )}
- *
- *    {shown && (
- *      <Baba name="my-anim">
- *        <CrossFadeMove>
- *          {({ ref, style }) => <div onClick={() => show(true)} ref={ref} style={style}>ending point</div>}
- *        </CrossFadeMove>
- *      </Baba>
- *    )}
- *  </div>
- * );
- * ```
- */
 export default class Baba extends React.PureComponent<BabaProps, State> {
   static displayName = 'Baba';
 
@@ -272,7 +238,8 @@ If it's an image, try and have the image loaded before mounting, or set a static
   }
 
   executeAnimations = () => {
-    const { name, container } = this.props;
+    const { name, container: getContainer } = this.props;
+    const container = typeof getContainer === 'function' ? getContainer() : getContainer;
     const fromTarget = babaStore.get(name);
 
     if (fromTarget) {
