@@ -168,12 +168,12 @@ export const Container = styled.div`
   height: 300px;
 `;
 
-export const Modal = styled.button<{ appearance: 'big' | 'small' }>`
+export const ImageModal = styled.img<{ appearance: 'big' | 'small' }>`
   display: block;
   background-color: #fff;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: 312px;
+  height: 171px;
   margin: 0 auto;
   cursor: pointer;
   box-shadow: 0 1px 10px rgba(32, 33, 36, 0.25);
@@ -187,10 +187,14 @@ export const Modal = styled.button<{ appearance: 'big' | 'small' }>`
   ${props =>
     props.appearance === 'big'
       ? css`
+          position: fixed;
+          top: 5%;
+          right: 5%;
           border-radius: 3px;
-          width: 100%;
-          height: 100%;
+          width: 1040px;
+          height: 572px;
           box-shadow: 0 1px 50px rgba(32, 33, 36, 0.25);
+          z-index: 9999999;
         `
       : ''};
 `;
