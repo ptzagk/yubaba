@@ -6,10 +6,24 @@ order: 1
 
 import { Playground } from 'docz';
 import { Toggler } from 'yubaba-common';
+import MenuIcon from '@material-ui/icons/Menu';
+import CloseIcon from '@material-ui/icons/Close';
+import * as Common from 'yubaba-common';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import MicIcon from '@material-ui/icons/Mic';
+import { IconButton } from '@material-ui/core';
+import Select from 'react-select';
 import { WrappedBaba as Baba } from '../../Baba';
+import { WrappedBabaManager as BabaManager } from '../../BabaManager';
 import Move from '../../animations/Move';
 import CrossFadeMove from '../../animations/CrossFadeMove';
 import * as Styled from './styled';
+import img1 from './images/1.png';
+import img2 from './images/2.jpeg';
+import img3 from './images/3.jpeg';
+import img4 from './images/4.png';
+import img5 from './images/5.png';
+import img6 from './images/6.jpeg';
 
 # Getting started
 
@@ -23,37 +37,62 @@ We can do this using the [Baba](/baba) and [Move](/move) components.
 
 For this example we are animating from one element to another over a state change.
 
+> **Tip -** Press backspace to select another value.
+
 <Playground>
-  <Styled.Container>
-    <Toggler>
-      {({ shown, toggle }) =>
-        !shown ? (
-          <div>
-            <Baba name="move">
+  <Toggler>
+    {({ shown, toggle }) =>
+      shown ? (
+        <Baba name={`item-${shown}`}>
+          <Move>
+            {baba => (
+              <div {...baba}>
+                <Select
+                  autoFocus
+                  isSearchable={false}
+                  value={{}}
+                  styles={{
+                    singleValue: () => ({}),
+                  }}
+                  onKeyDown={() => toggle()}
+                  formatOptionLabel={() => (
+                    <Styled.Value>
+                      {Styled.data[shown].title}
+                      <Styled.Description>{Styled.data[shown].description}</Styled.Description>
+                    </Styled.Value>
+                  )}
+                />
+              </div>
+            )}
+          </Move>
+        </Baba>
+      ) : (
+        <Styled.List>
+          {Styled.data.map((item, index) => (
+            <Baba key={index} name={`item-${index}`}>
               <Move>
-                {({ ref, style }) => (
-                  <Styled.Thumbnail style={style} onClick={() => toggle()} innerRef={ref} />
+                {baba => (
+                  <Styled.Value
+                    onClick={() => toggle(`${index}`)}
+                    style={baba.style}
+                    innerRef={baba.ref}
+                  >
+                    {item.title}
+                    <Styled.Description>{item.description}</Styled.Description>
+                  </Styled.Value>
                 )}
               </Move>
             </Baba>
-          </div>
-        ) : (
-          <Baba name="move">
-            <Move>
-              {({ ref, style }) => (
-                <Styled.Banner style={style} onClick={() => toggle()} innerRef={ref} />
-              )}
-            </Move>
-          </Baba>
-        )
-      }
-    </Toggler>
-  </Styled.Container>
+          ))}
+        </Styled.List>
+      )
+    }
+  </Toggler>
 </Playground>
 
 ## Moving to the same element
 
-Sometimes we want to animate to and from the same element over a state change,
+Sometimes we want to animate over the same element after a state change,
 to do that we can abuse how `key`'s work in react - we just update the key at the same time as the state change.
 
 <Playground>
@@ -63,7 +102,7 @@ to do that we can abuse how `key`'s work in react - we just update the key at th
         <Baba name="same-move" key={shown}>
           <Move>
             {({ ref, style }) => (
-              <Styled.Thumbnail
+              <Styled.Modal
                 style={style}
                 onClick={() => toggle()}
                 innerRef={ref}
@@ -83,34 +122,233 @@ Sometimes we can't have the affordances of two elements visually looking the sam
 for that we can use the [CrossFadeMove](/cross-fade-move) animation to transition between them.
 
 <Playground>
-  <Styled.Container>
-    <Toggler>
-      {({ shown, toggle }) =>
-        !shown ? (
-          <div>
-            <Baba name="cross-fade-move">
-              <CrossFadeMove>
-                {({ ref, style }) => (
-                  <Styled.Thumbnail style={style} onClick={() => toggle()} innerRef={ref} />
-                )}
-              </CrossFadeMove>
-            </Baba>
-          </div>
-        ) : (
-          <Baba name="cross-fade-move">
+  <Styled.Center>
+  <Common.Toggler>
+    {({ shown, toggle }) => (
+      <Common.SmallViewport>
+        {shown || (
+          <Baba name="google-searchbar">
             <CrossFadeMove>
               {({ ref, style }) => (
-                <Styled.Banner
-                  style={style}
-                  onClick={() => toggle()}
-                  innerRef={ref}
-                  background="#ED2939"
-                />
+                <Styled.FloatingSearchBar onClick={() => toggle()} innerRef={ref} style={style}>
+                  <IconButton color="default" aria-label="Menu" style={{ marginLeft: 'auto ' }}>
+                    <MicIcon colorRendering="blue" />
+                  </IconButton>
+                </Styled.FloatingSearchBar>
               )}
             </CrossFadeMove>
           </Baba>
-        )
-      }
-    </Toggler>
-  </Styled.Container>
+        )}
+
+        {shown && (
+          <Baba name="google-searchbar">
+            <CrossFadeMove>
+              {({ ref, style }) => (
+                <Styled.FixedSearchBar innerRef={ref} style={style}>
+                  <IconButton color="default" aria-label="Menu" onClick={() => toggle()}>
+                    <BackIcon color="inherit" />
+                  </IconButton>
+
+                  <Styled.Input autoFocus placeholder="Search or type URL" />
+
+                  <IconButton color="default" aria-label="Menu">
+                    <MicIcon colorRendering="blue" />
+                  </IconButton>
+                </Styled.FixedSearchBar>
+              )}
+            </CrossFadeMove>
+          </Baba>
+        )}
+      </Common.SmallViewport>
+    )}
+
+  </Common.Toggler>
+  </Styled.Center>
+</Playground>
+
+## Moving from a persisted element
+
+Sometimes it's useful to animate between two elements where one is never removed,
+for example if we show a modal over the top of screen content.
+To make this possible the [Baba](/baba) component can be controlled via the `in` prop.
+Set it to `true` when you consider it to be shown,
+and `false` when you consider it to be hidden.
+
+> **Tip -** After clicking on an image you'll notice the content is shown after the animation has completed,
+> check out [Advanced usage](/advanced-usage#delay-showing-content-until-all-animations-have-finished) for more info!
+
+<Playground>
+  <Styled.Center>
+  <Common.Toggler>
+    {({ toggle, shown }) => {
+      const image = ({ src, title, from, onClick, in: inn }) => (
+        <Styled.Root>
+          <Styled.ImageContainer>
+            <Baba name={src} in={inn}>
+              <Move>
+                {({ ref, style }) => (
+                  <Styled.Img
+                    src={src}
+                    onClick={onClick}
+                    innerRef={ref}
+                    style={{ ...style, opacity: !inn ? 0 : style.opacity }}
+                  />
+                )}
+              </Move>
+            </Baba>
+
+            <Styled.ImageBack />
+          </Styled.ImageContainer>
+
+          <Styled.ImageTitle>{title}</Styled.ImageTitle>
+          <Styled.ImageFrom>{from}</Styled.ImageFrom>
+        </Styled.Root>
+      );
+
+      const details = ({ src, title, onClick }) => (
+        <BabaManager name={src}>
+          {props => (
+            <Styled.ImagePageRoot {...props}>
+              <IconButton
+                color="default"
+                aria-label="Menu"
+                style={{ top: 26, left: 0, position: 'absolute' }}
+                onClick={onClick}
+              >
+                <CloseIcon color="inherit" />
+              </IconButton>
+
+              <Baba name={src}>
+                <Move>
+                  {({ ref, style }) => <Styled.PageImage src={src} innerRef={ref} style={style} />}
+                </Move>
+              </Baba>
+
+              <Styled.ContentContainer>
+                <Styled.FadeIn in={props.style.visibility !== 'hidden'}>
+                  <Styled.MetaRoot>
+                    <Styled.PageTitle>{title}</Styled.PageTitle>
+                    <Styled.Copyright>Images may be subject to copyright.</Styled.Copyright>
+                  </Styled.MetaRoot>
+
+                  <Styled.Images>
+                    <Styled.Related>Related images</Styled.Related>
+                    <Styled.Related>See more</Styled.Related>
+                  </Styled.Images>
+
+                  <Styled.Images>
+                    <Styled.Column>
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                    </Styled.Column>
+                    <Styled.Column>
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                      {image({
+                        src: `${img4}/`,
+                        title: 'Washington Capitals - Wikipedia 1',
+                        from: 'en.wikipedia.org',
+                      })}
+                    </Styled.Column>
+                  </Styled.Images>
+                </Styled.FadeIn>
+              </Styled.ContentContainer>
+            </Styled.ImagePageRoot>
+          )}
+        </BabaManager>
+      );
+
+      return (
+        <Common.SmallViewport>
+          <Styled.Header>
+            <IconButton color="default" aria-label="Menu" style={{ marginRight: '10px' }}>
+              <MenuIcon />
+            </IconButton>
+
+            <Styled.Logo />
+          </Styled.Header>
+
+          <Styled.Images>
+            <Styled.Column>
+              {image({
+                src: img1,
+                title: 'Official Washington Capitals Website | NHL.com',
+                from: 'nhl.com',
+                onClick: () => toggle(img1),
+                in: shown !== img1,
+              })}
+              {image({
+                src: img3,
+                title: 'Washington Capitals: 2017 Season Preview, Predictions',
+                from: 'puckprose.com',
+                onClick: () => toggle(img3),
+                in: shown !== img3,
+              })}
+              {image({
+                src: img6,
+                title: 'The Washington Capitals are up to their old tricks again ...',
+                from: 'nhl.nbcsports.com',
+                onClick: () => toggle(img6),
+                in: shown !== img6,
+              })}
+            </Styled.Column>
+            <Styled.Column>
+              {image({
+                src: img4,
+                title: 'Washington Capitals - Wikipedia',
+                from: 'en.wikipedia.org',
+                onClick: () => toggle(img4),
+                in: shown !== img4,
+              })}
+              {image({
+                src: img5,
+                title: 'Washington Capitals - Home | Facebook',
+                from: 'facebook.com',
+                onClick: () => toggle(img5),
+                in: shown !== img5,
+              })}
+              {image({
+                src: img2,
+                title: 'Capitals Announce 2017-18 Preseason Schedule',
+                from: 'nhl.com',
+                onClick: () => toggle(img2),
+                in: shown !== img2,
+              })}
+            </Styled.Column>
+          </Styled.Images>
+
+          {shown &&
+            details({
+              src: shown,
+              title: 'Washington Capitals - Wikipedia',
+              from: 'en.wikipedia.org',
+              onClick: () => toggle(),
+            })}
+        </Common.SmallViewport>
+      );
+    }}
+
+  </Common.Toggler>
+  </Styled.Center>
 </Playground>

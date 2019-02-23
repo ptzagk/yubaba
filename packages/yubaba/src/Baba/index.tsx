@@ -302,12 +302,14 @@ If it's an image, try and have the image loaded before mounting, or set a static
 
             // This ensures that if there was an update to the jsx that is animating,
             // it changes next frame. Resulting in the transition _actually_ happening.
-            requestAnimationFrame(() =>
-              renderSubtreeIntoContainer(
-                this,
-                jsx as React.ReactElement<{}>,
-                elementToMountChildren
-              )
+            requestAnimationFrame(
+              () =>
+                elementToMountChildren &&
+                renderSubtreeIntoContainer(
+                  this,
+                  jsx as React.ReactElement<{}>,
+                  elementToMountChildren
+                )
             );
           };
 
