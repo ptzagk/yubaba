@@ -13,6 +13,7 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import MicIcon from '@material-ui/icons/Mic';
 import { IconButton } from '@material-ui/core';
 import Select from 'react-select';
+import { MemoryRouter, Link, Switch, Route } from 'react-router-dom';
 import { WrappedBaba as Baba } from '../../Baba';
 import { WrappedBabaManager as BabaManager } from '../../BabaManager';
 import Move from '../../animations/Move';
@@ -38,8 +39,6 @@ We can do this using the [Baba](/baba) and [Move](/move) components.
 
 For this example we are animating from one element to another over a state change.
 
-> **Tip -** Press backspace to select another value.
-
 <Playground>
   <Toggler>
     {({ shown, toggle }) =>
@@ -55,7 +54,8 @@ For this example we are animating from one element to another over a state chang
                   styles={{
                     singleValue: () => ({}),
                   }}
-                  onKeyDown={() => toggle()}
+                  isClearable
+                  onChange={() => toggle()}
                   formatOptionLabel={() => (
                     <Styled.Value>
                       {Styled.data[shown].title}
@@ -91,6 +91,9 @@ For this example we are animating from one element to another over a state chang
   </Toggler>
 </Playground>
 
+> **Tip -** In `yubaba` animations are triggered by state changes.
+> This can occur either by mounting/unmounting or changing the `in` prop of [Baba](/baba) elements.
+
 ## Moving to the same element
 
 Sometimes we want to animate over the same element after a state change,
@@ -119,11 +122,12 @@ To do that we can abuse how `key`'s work in react - we just update the key at th
   </Styled.Container>
 </Playground>
 
-> **Tip -** You may be thinking - but wait - why not just use regular CSS transitions for this?
-> Well you're in luck - under the hood that's what `yubaba` is using!
-> As an added bonus for using `yubaba` you get the powerful orchestration that is provided out-of-the-box.
+> **Tip -** You may be thinking why not just use regular CSS transitions for this?
+> Well under the hood that's what `yubaba` is using!
+> Using `yubaba` you can animate between different css `position`s,
+> the above goes from `static` to `fixed` while increasing in size - and it works with very little effort!
 
-## Moving to a another distinct element
+## Moving to another distinct element
 
 Sometimes we can't have the affordances of two elements visually looking the same,
 for that we can use the [CrossFadeMove](/cross-fade-move) animation to transition between them.
@@ -175,6 +179,74 @@ for that we can use the [CrossFadeMove](/cross-fade-move) animation to transitio
 
 > **Tip -** Only use this animation when your elements are very different from each other,
 > it is more expensive than a regular [Move](/move) animation.
+
+## Animating route transitions
+
+`yubaba` is just components - so you can use them as you'd usually use them.
+Remember that `yubaba` animations are triggered after a state change,
+and if you're using a router the state is just kept at a higher level.
+Here we have the above example re-written with [react-router](https://reacttraining.com/react-router/).
+
+<Playground>
+  <Styled.Center>
+    <Common.SmallViewport>
+      <MemoryRouter>
+        <Switch>
+          <Route
+            path="/search"
+            render={() => (
+              <div>
+                <Baba name="searchbar">
+                  <CrossFadeMove>
+                    {({ ref, style }) => (
+                      <Styled.FixedSearchBar innerRef={ref} style={style}>
+                        <Link to="/">
+                          <IconButton color="default" aria-label="Menu">
+                            <BackIcon color="inherit" />
+                          </IconButton>
+                        </Link>
+
+                        <Styled.Input autoFocus placeholder="Search or type URL" />
+
+                        <IconButton color="default" aria-label="Menu">
+                          <MicIcon colorRendering="blue" />
+                        </IconButton>
+                      </Styled.FixedSearchBar>
+                    )}
+                  </CrossFadeMove>
+                </Baba>
+              </div>
+            )}
+          />
+
+          <Route
+            path="/"
+            render={() => (
+              <Baba name="searchbar">
+                <CrossFadeMove>
+                  {({ ref, style }) => (
+                    <Link to="/search">
+                      <Styled.FloatingSearchBar innerRef={ref} style={style}>
+                        <IconButton
+                          color="default"
+                          aria-label="Menu"
+                          style={{ marginLeft: 'auto ' }}
+                        >
+                          <MicIcon colorRendering="blue" />
+                        </IconButton>
+                      </Styled.FloatingSearchBar>
+                    </Link>
+                  )}
+                </CrossFadeMove>
+              </Baba>
+            )}
+          />
+        </Switch>
+      </MemoryRouter>
+    </Common.SmallViewport>
+
+  </Styled.Center>
+</Playground>
 
 ## Moving from a persisted element
 
@@ -361,4 +433,4 @@ and `false` when you consider it to be hidden.
 </Playground>
 
 > **Tip -** After clicking on an image you'll notice the content is shown after the animation has completed,
-> check out [Advanced usage](/advanced-usage#delay-showing-content-until-all-animations-have-finished) for more info!
+> check out [Advanced usage](/advanced-usage) for more info!

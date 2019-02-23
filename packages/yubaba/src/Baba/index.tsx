@@ -83,6 +83,12 @@ export interface BabaProps extends CollectorChildrenProps, InjectedProps {
    * Defaults to 50ms, might want to bump it up if loading something that was code split.
    */
   timeToWaitForNextBaba: number;
+
+  /**
+   * HTMLElement container used when creating elements for animations,
+   * generally only supporting animations will need this.
+   */
+  container: HTMLElement;
 }
 
 /**
@@ -125,6 +131,7 @@ export default class Baba extends React.PureComponent<BabaProps, State> {
   static defaultProps = {
     onFinish: noop,
     timeToWaitForNextBaba: 50,
+    container: document.body,
   };
 
   state: State = {
@@ -265,7 +272,7 @@ If it's an image, try and have the image loaded before mounting, or set a static
   }
 
   executeAnimations = () => {
-    const { name } = this.props;
+    const { name, container } = this.props;
     const fromTarget = babaStore.get(name);
 
     if (fromTarget) {
@@ -297,7 +304,7 @@ If it's an image, try and have the image loaded before mounting, or set a static
               elementToMountChildren = document.createElement('div');
               // We insert the new element at the beginning of the body to ensure correct
               // stacking context.
-              document.body.insertBefore(elementToMountChildren, document.body.firstChild);
+              container.insertBefore(elementToMountChildren, container.firstChild);
             }
 
             // This ensures that if there was an update to the jsx that is animating,
@@ -316,7 +323,7 @@ If it's an image, try and have the image loaded before mounting, or set a static
           const unmount = () => {
             if (elementToMountChildren) {
               unmountComponentAtNode(elementToMountChildren);
-              document.body.removeChild(elementToMountChildren);
+              container.removeChild(elementToMountChildren);
               elementToMountChildren = null;
             }
           };
