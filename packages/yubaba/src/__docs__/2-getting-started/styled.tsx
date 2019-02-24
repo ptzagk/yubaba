@@ -260,8 +260,6 @@ export const Description = styled.small`
 `;
 
 export const List = styled.div`
-  padding: 10px;
-
   ${Value} {
     margin-bottom: 10px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);

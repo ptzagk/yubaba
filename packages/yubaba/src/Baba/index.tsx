@@ -64,7 +64,7 @@ export interface BabaProps extends CollectorChildrenProps, InjectedProps {
   name: string;
 
   /**
-   * Used alternatively to the implicit animation triggering via unmounting/mounting of Baba components.
+   * Used alternatively to the implicit animation triggering via unmounting or mounting of Baba components.
    * Only use `in` if your component is expected to persist through the entire lifecyle of the app.
    * When you transition to the "next page" make sure to set your "in" to false. When you transition
    * back to the original page set the "in" prop back to true. This lets the Baba components know when to
