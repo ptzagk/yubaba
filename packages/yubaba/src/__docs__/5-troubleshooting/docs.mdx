@@ -15,3 +15,16 @@ To get around this you can use [React `key` prop](https://reactjs.org/docs/lists
 
 Your target `ref` is probably not being set correctly.
 Double check your [Baba](/baba) elements.
+
+> ** Tip -**If you're having trouble getting ahold of a `ref` think about adding some extra wrapper markup.
+
+```diff
+<Baba>
+  {baba => (
++    <div {...baba}>
++      <MyComponent />
+-      <MyComponent {...baba} />
++    </div>
+  )}
+</Baba>
+```
