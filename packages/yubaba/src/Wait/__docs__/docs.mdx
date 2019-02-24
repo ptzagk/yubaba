@@ -9,11 +9,20 @@ import Wait from '../index';
 # Wait
 
 Is used to pause the execution of all child animations until all parent children animations have completed.
+Add it between two animations for the deeper descendant animation to start only after the previous one has finished.
 
 ## Usage
 
-<Playground>// TODO</Playground>
+```js
+import Baba, { Wait, Move, CircleExpand } from 'yubaba';
 
-## Props
-
-<PropsTable of={Wait} />
+export const AnimatedListItem = ({ id, children }) => (
+  <Baba name={`list-item-${id}`}>
+    <CircleExpand background="red">
+      <Wait>
+        <Move>{baba => <li {...baba}>{children}</li>}</Move>
+      </Wait>
+    </CircleExpand>
+  </Baba>
+);
+```
