@@ -4,10 +4,10 @@ route: /circle-expand
 ---
 
 import { Playground, PropsTable } from 'docz';
-import Select from 'react-select';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
 import Baba from '../../../Baba';
 import CircleExpand from '../index';
+import * as Styled from './styled';
 
 # CircleExpand
 
@@ -18,7 +18,31 @@ Generally you should use [CircleExpand](/circle-expand) and [CricleShrink](/circ
 
 ## Usage
 
-<Playground>// TODO</Playground>
+<Playground>
+  <Common.Toggler>
+    {({ shown, toggle }) => (
+      <div id="yo">
+        {!shown ? (
+          <Styled.Container>
+            <Baba name="circle-expand" key="1">
+              <CircleExpand background="#ff5e6d">
+                {({ ref, style }) => (
+                  <Styled.Button onClick={() => toggle()} style={style} innerRef={ref} />
+                )}
+              </CircleExpand>
+            </Baba>
+          </Styled.Container>
+        ) : (
+          <Styled.Container onClick={() => toggle()} interactive>
+            <Baba name="circle-expand" key="2">
+              {({ ref, style }) => <div style={style} ref={ref} />}
+            </Baba>
+          </Styled.Container>
+        )}
+      </div>
+    )}
+  </Common.Toggler>
+</Playground>
 
 ## Props
 

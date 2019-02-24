@@ -4,9 +4,9 @@ route: /circle-shrink
 ---
 
 import { Playground, PropsTable } from 'docz';
-import Select from 'react-select';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
 import Baba from '../../../Baba';
+import * as Styled from './styled';
 import CircleShrink from '../index';
 
 # CircleShrink
@@ -18,7 +18,31 @@ Generally you should use [CircleExpand](/circle-expand) and [CricleShrink](/circ
 
 ## Usage
 
-<Playground>// TODO</Playground>
+<Playground>
+  <Common.Toggler>
+    {({ shown, toggle }) => (
+      <div id="yo">
+        {shown ? (
+          <Styled.Container>
+            <Baba name="circle-shrink" key="1">
+              {({ ref, style }) => (
+                <Styled.Button onClick={() => toggle()} style={style} innerRef={ref} />
+              )}
+            </Baba>
+          </Styled.Container>
+        ) : (
+          <Styled.Container onClick={() => toggle()} interactive>
+            <Baba name="circle-shrink" key="2">
+              <CircleShrink background="#ff5e6d">
+                {({ ref, style }) => <div style={style} ref={ref} />}
+              </CircleShrink>
+            </Baba>
+          </Styled.Container>
+        )}
+      </div>
+    )}
+  </Common.Toggler>
+</Playground>
 
 ## Props
 

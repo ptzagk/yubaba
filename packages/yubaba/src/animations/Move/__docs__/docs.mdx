@@ -4,11 +4,9 @@ route: /move
 ---
 
 import { Playground, PropsTable } from 'docz';
-import Select from 'react-select';
 import { Toggler } from 'yubaba-common';
 import Baba from '../../../Baba';
 import Move from '../index';
-import * as Examples from './examples';
 
 # Move
 
@@ -19,56 +17,7 @@ This animation uses the FLIP technique so it is very performant.
 ## Usage
 
 <Playground>
-  <Toggler>
-    {({ shown, toggle }) =>
-      shown ? (
-        <Baba name={`item-${shown}`}>
-          <Move>
-            {baba => (
-              <div {...baba}>
-                <Select
-                  autoFocus
-                  isSearchable={false}
-                  value={{}}
-                  styles={{
-                    singleValue: () => ({}),
-                  }}
-                  onKeyDown={() => toggle()}
-                  formatOptionLabel={() => (
-                    <Examples.Value>
-                      {Examples.data[shown].title}
-                      <Examples.Description>
-                        {Examples.data[shown].description}
-                      </Examples.Description>
-                    </Examples.Value>
-                  )}
-                />
-              </div>
-            )}
-          </Move>
-        </Baba>
-      ) : (
-        <Examples.List>
-          {Examples.data.map((item, index) => (
-            <Baba key={index} name={`item-${index}`}>
-              <Move>
-                {baba => (
-                  <Examples.Value
-                    onClick={() => toggle(`${index}`)}
-                    style={baba.style}
-                    innerRef={baba.ref}
-                  >
-                    {item.title}
-                    <Examples.Description>{item.description}</Examples.Description>
-                  </Examples.Value>
-                )}
-              </Move>
-            </Baba>
-          ))}
-        </Examples.List>
-      )
-    }
-  </Toggler>
+  <Toggler>{toggler => 'todo'}</Toggler>
 </Playground>
 
 ## Props
