@@ -15,6 +15,18 @@ it will execute all the animations **top to bottom** if a matching Baba pair is 
 
 > **Tip -** See [Getting started](/getting-started) for more information on how to use this component.
 
+## Usage
+
+```js
+import Baba from 'yubaba';
+
+const ListItem = ({ index }) => (
+  <Baba name={`item-${index}`}>
+    {({ ref, style, className }) => <div ref={ref} style={style} className={className} />}
+  </Baba>
+);
+```
+
 ## Props
 
 <PropsTable of={Baba} />
