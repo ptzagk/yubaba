@@ -172,12 +172,12 @@ export const ImageModal = styled.img<{ appearance: 'big' | 'small' }>`
   display: block;
   background-color: #fff;
   border: none;
-  width: 312px;
-  height: 171px;
+  width: 50%;
   margin: 0 auto;
   cursor: pointer;
   box-shadow: 0 1px 10px rgba(32, 33, 36, 0.25);
   border-radius: 1px;
+  z-index: 9999999;
 
   :focus {
     outline: 2px solid #2998f7;
@@ -191,10 +191,12 @@ export const ImageModal = styled.img<{ appearance: 'big' | 'small' }>`
           top: 5%;
           right: 5%;
           border-radius: 3px;
-          width: 1040px;
-          height: 572px;
           box-shadow: 0 1px 50px rgba(32, 33, 36, 0.25);
-          z-index: 9999999;
+          width: 90%;
+
+          @media screen and (min-width: 1120px) {
+            width: 60%;
+          }
         `
       : ''};
 `;
@@ -272,6 +274,10 @@ export const List = styled.div`
   }
 `;
 
+export const SelectContainer = styled.div`
+  height: 398px;
+`;
+
 export const data = [
   {
     title: 'Software licensing',
@@ -287,6 +293,6 @@ export const data = [
   },
   {
     title: 'Requesting new software',
-    description: 'Need some more Slacks? Want to Stack some Browsers? Have a look here.',
+    description: 'Need some more Slacks?',
   },
 ];

@@ -4,9 +4,10 @@ route: /move
 ---
 
 import { Playground, PropsTable } from 'docz';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
 import Baba from '../../../Baba';
 import Move from '../index';
+import * as Styled from './styled';
 
 # Move
 
@@ -17,7 +18,27 @@ This animation uses the FLIP technique so it is very performant.
 ## Usage
 
 <Playground>
-  <Toggler>{toggler => 'todo'}</Toggler>
+  <Common.Toggler>
+    {({ shown, toggle }) =>
+      shown ? (
+        <Baba name="move" key="1">
+          <Move>
+            {({ ref, style }) => (
+              <Styled.Box onClick={() => toggle()} style={style} innerRef={ref} />
+            )}
+          </Move>
+        </Baba>
+      ) : (
+        <Baba name="move" key="2">
+          <Move>
+            {({ ref, style }) => (
+              <Styled.Box style={style} innerRef={ref} onClick={() => toggle()} alignRight />
+            )}
+          </Move>
+        </Baba>
+      )
+    }
+  </Common.Toggler>
 </Playground>
 
 ## Props

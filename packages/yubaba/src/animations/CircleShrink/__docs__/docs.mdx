@@ -20,27 +20,25 @@ Generally you should use [CircleExpand](/circle-expand) and [CricleShrink](/circ
 
 <Playground>
   <Common.Toggler>
-    {({ shown, toggle }) => (
-      <div id="yo">
-        {shown ? (
-          <Styled.Container>
-            <Baba name="circle-shrink" key="1">
-              {({ ref, style }) => (
-                <Styled.Button onClick={() => toggle()} style={style} innerRef={ref} />
-              )}
-            </Baba>
-          </Styled.Container>
-        ) : (
-          <Styled.Container onClick={() => toggle()} interactive>
-            <Baba name="circle-shrink" key="2">
-              <CircleShrink background="#ff5e6d">
-                {({ ref, style }) => <div style={style} ref={ref} />}
-              </CircleShrink>
-            </Baba>
-          </Styled.Container>
-        )}
-      </div>
-    )}
+    {({ shown, toggle }) =>
+      shown ? (
+        <Styled.Container>
+          <Baba name="circle-shrink" key="1">
+            {({ ref, style }) => (
+              <Styled.Button onClick={() => toggle()} style={style} innerRef={ref} />
+            )}
+          </Baba>
+        </Styled.Container>
+      ) : (
+        <Styled.Container onClick={() => toggle()} interactive>
+          <Baba name="circle-shrink" key="2">
+            <CircleShrink background="#ff5e6d">
+              {({ ref, style }) => <div style={style} ref={ref} />}
+            </CircleShrink>
+          </Baba>
+        </Styled.Container>
+      )
+    }
   </Common.Toggler>
 </Playground>
 

@@ -4,18 +4,42 @@ route: /fade-move
 ---
 
 import { Playground, PropsTable } from 'docz';
-import Select from 'react-select';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
 import Baba from '../../../Baba';
 import FadeMove from '../index';
+import * as Styled from './styled';
 
 # FadeMove
 
-Will `position: absolute` move the origin element to the destination element while fading out.
+Will move the origin element to the destination element while fading out.
 
 ## Usage
 
-<Playground>// TODO</Playground>
+<Playground>
+  <Common.Toggler>
+    {({ shown, toggle }) =>
+      shown ? (
+        <Baba name="fade-move" key="1">
+          <FadeMove>
+            {({ ref, style }) => (
+              <Styled.Box onClick={() => toggle()} style={style} innerRef={ref}>
+                Hello, world!
+              </Styled.Box>
+            )}
+          </FadeMove>
+        </Baba>
+      ) : (
+        <Baba name="fade-move" key="2">
+          <FadeMove>
+            {({ ref, style }) => (
+              <Styled.Box style={style} innerRef={ref} onClick={() => toggle()} alignRight />
+            )}
+          </FadeMove>
+        </Baba>
+      )
+    }
+  </Common.Toggler>
+</Playground>
 
 ## Props
 

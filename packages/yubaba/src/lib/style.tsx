@@ -9,6 +9,7 @@ export const combine = (t1: string) => (t2?: string | number) => {
 export const zIndexStack = {
   circleExpand: 1000,
   circleShrink: 1000,
+  swipe: 1000,
   move: 1000,
   fadeMove: 1001,
   concealMove: 1000,

@@ -4,20 +4,43 @@ route: /cross-fade-move
 ---
 
 import { Playground, PropsTable } from 'docz';
-import Select from 'react-select';
-import { Toggler } from 'yubaba-common';
+import * as Common from 'yubaba-common';
 import Baba from '../../../Baba';
 import CrossFadeMove from '../index';
+import * as Styled from './styled';
 
 # CrossFadeMove
 
 Is a composite animation of [CrossFade](/cross-fade) and [Move](/move).
-Useful for animating an element moving from one position to another.
-Works best when the element has **stark visual differences**, but is still of a similar aspect ratio.
+Useful for animating an element moving from one position to another when the elements have **stark visual differences** to each other, but is still of a similar aspect ratio.
 
 ## Usage
 
-<Playground>// TODO</Playground>
+<Playground>
+  <Common.Toggler>
+    {({ shown, toggle }) =>
+      shown ? (
+        <Baba name="cross-fade-move" key="1">
+          <CrossFadeMove>
+            {({ ref, style }) => (
+              <Styled.Box onClick={() => toggle()} style={style} innerRef={ref}>
+                Hello, world!
+              </Styled.Box>
+            )}
+          </CrossFadeMove>
+        </Baba>
+      ) : (
+        <Baba name="cross-fade-move" key="2">
+          <CrossFadeMove>
+            {({ ref, style }) => (
+              <Styled.Box style={style} innerRef={ref} onClick={() => toggle()} alignRight />
+            )}
+          </CrossFadeMove>
+        </Baba>
+      )
+    }
+  </Common.Toggler>
+</Playground>
 
 ## Props
 
