@@ -73,7 +73,7 @@ export default class Move extends React.Component<MoveProps> {
 
     if (useFocalTarget && !data.destination.focalTargetElementBoundingBox) {
       throw new Error(`yubaba
-targetElement was missing.`);
+<FocalTarget /> was not found, if you haven't defined one make sure to add one as a descendant of your target Baba.`);
     }
 
     // Scroll could have changed between unmount and this prepare step.

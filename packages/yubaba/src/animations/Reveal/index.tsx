@@ -60,7 +60,7 @@ export default class Reveal extends React.Component<RevealProps> {
   beforeAnimate: AnimationCallback = (data, onFinish, setChildProps) => {
     if (!data.destination.focalTargetElementBoundingBox) {
       throw new Error(`yubaba
-targetElement was missing.`);
+<FocalTarget /> was not found, if you haven't defined one make sure to add one as a descendant of your target Baba.`);
     }
 
     const { childrenTransformX, childrenTransformY, useClipPath } = this.props;

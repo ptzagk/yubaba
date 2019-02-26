@@ -52,7 +52,7 @@ export default class ConcealMove extends React.Component<ConcealMoveProps> {
   ) => {
     if (!data.origin.focalTargetElementBoundingBox) {
       throw new Error(`yubaba
-targetElement was missing.`);
+<FocalTarget /> was not found, if you haven't defined one make sure to add one as a descendant of your target Baba.`);
     }
 
     const { duration, timingFunction, zIndex } = this.props;
