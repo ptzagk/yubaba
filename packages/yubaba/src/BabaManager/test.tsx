@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import Baba from '../Baba';
-import BabaManager from '../BabaManager';
+import { WrappedBabaManager as BabaManager } from '../BabaManager';
 import * as utils from '../__tests__/utils';
 import defer from '../lib/defer';
 
